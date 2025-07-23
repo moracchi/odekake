@@ -1,0 +1,608 @@
+/* 基本設定 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Helvetica Neue', Arial, 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', Meiryo, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    color: #333;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* ヘッダー */
+.header {
+    text-align: center;
+    margin-bottom: 30px;
+    color: white;
+}
+
+.app-title {
+    font-size: 2.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.subtitle {
+    font-size: 1.1em;
+    opacity: 0.9;
+    margin-bottom: 15px;
+}
+
+/* 容量表示 */
+.storage-info {
+    background: rgba(255,255,255,0.2);
+    padding: 8px 16px;
+    border-radius: 20px;
+    display: inline-block;
+    font-size: 0.9em;
+}
+
+.storage-usage {
+    color: white;
+}
+
+/* ガチャセクション */
+.gacha-section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+}
+
+.gacha-container {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.slot-display {
+    width: 200px;
+    height: 200px;
+    margin: 0 auto 30px;
+    border: 4px solid #ffd700;
+    border-radius: 15px;
+    background: #f9f9f9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.slot-item {
+    text-align: center;
+    transition: transform 0.1s;
+}
+
+.slot-item .placeholder {
+    font-size: 4em;
+    margin-bottom: 10px;
+}
+
+.slot-item img {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+.slot-item p {
+    font-weight: bold;
+    color: #666;
+}
+
+.gacha-button {
+    background: linear-gradient(45deg, #ff6b6b, #ee5a52);
+    border: none;
+    border-radius: 50px;
+    padding: 15px 40px;
+    font-size: 1.5em;
+    font-weight: bold;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+    margin-bottom: 20px;
+}
+
+.gacha-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+}
+
+.gacha-button:active {
+    transform: translateY(0);
+}
+
+.gacha-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.button-shine {
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+    transition: left 0.5s;
+}
+
+.gacha-button:hover .button-shine {
+    left: 100%;
+}
+
+.places-count {
+    color: #666;
+    font-size: 0.9em;
+    margin-bottom: 15px;
+}
+
+/* 確率表示 */
+.probability-info {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+    font-size: 0.85em;
+}
+
+.prob-item {
+    background: rgba(0,0,0,0.05);
+    padding: 5px 10px;
+    border-radius: 15px;
+    color: #666;
+    font-weight: bold;
+}
+
+/* リストセクション */
+.list-section {
+    background: white;
+    border-radius: 20px;
+    padding: 30px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+}
+
+.section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.section-header h2 {
+    color: #333;
+    font-size: 1.5em;
+}
+
+.add-button {
+    background: #4ecdc4;
+    border: none;
+    border-radius: 25px;
+    padding: 10px 20px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.add-button:hover {
+    background: #45b7b8;
+}
+
+.places-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.place-card {
+    background: #f9f9f9;
+    border-radius: 15px;
+    padding: 15px;
+    text-align: center;
+    position: relative;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.place-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+}
+
+.place-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+
+.place-card h3 {
+    color: #333;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+/* 確率バッジ */
+.probability-badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 10px;
+    font-size: 0.8em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.probability-badge.high {
+    background: #ff6b6b;
+    color: white;
+}
+
+.probability-badge.medium {
+    background: #ffd93d;
+    color: #333;
+}
+
+.probability-badge.low {
+    background: #74b9ff;
+    color: white;
+}
+
+.card-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.card-actions button {
+    border: none;
+    border-radius: 20px;
+    padding: 5px 15px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: opacity 0.3s;
+}
+
+.edit-btn {
+    background: #74b9ff;
+    color: white;
+}
+
+.delete-btn {
+    background: #fd79a8;
+    color: white;
+}
+
+.card-actions button:hover {
+    opacity: 0.8;
+}
+
+.empty-state {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 60px 20px;
+    color: #999;
+}
+
+.empty-icon {
+    font-size: 4em;
+    margin-bottom: 20px;
+}
+
+/* モーダル */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+.modal, .result-modal {
+    background: white;
+    border-radius: 20px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 90vh;
+    overflow-y: auto;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.modal-header {
+    padding: 20px 25px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5em;
+    cursor: pointer;
+    color: #999;
+}
+
+.modal-body {
+    padding: 25px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input[type="text"] {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 1em;
+}
+
+.form-group input[type="text"]:focus {
+    outline: none;
+    border-color: #4ecdc4;
+}
+
+/* 確率選択 */
+.probability-selector {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.radio-option {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid #eee;
+    border-radius: 10px;
+    transition: all 0.3s;
+}
+
+.radio-option:hover {
+    border-color: #4ecdc4;
+}
+
+.radio-option input[type="radio"] {
+    margin-right: 10px;
+}
+
+.radio-option input[type="radio"]:checked + .radio-label {
+    font-weight: bold;
+}
+
+.radio-label.high {
+    color: #ff6b6b;
+}
+
+.radio-label.medium {
+    color: #f39c12;
+}
+
+.radio-label.low {
+    color: #74b9ff;
+}
+
+.form-group input[type="file"] {
+    width: 100%;
+    padding: 10px;
+    border: 2px dashed #ddd;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+.image-info {
+    margin-top: 5px;
+}
+
+.image-info small {
+    color: #666;
+    font-style: italic;
+}
+
+.image-preview {
+    margin-top: 15px;
+    text-align: center;
+}
+
+.image-preview img {
+    max-width: 200px;
+    max-height: 200px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.modal-footer, .result-actions {
+    padding: 20px 25px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 15px;
+    justify-content: flex-end;
+}
+
+.btn-primary, .btn-secondary {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 25px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: opacity 0.3s;
+}
+
+.btn-primary {
+    background: #4ecdc4;
+    color: white;
+}
+
+.btn-secondary {
+    background: #ddd;
+    color: #666;
+}
+
+.btn-primary:hover, .btn-secondary:hover {
+    opacity: 0.8;
+}
+
+/* 結果モーダル */
+.result-modal {
+    text-align: center;
+}
+
+.result-header {
+    padding: 30px 25px 20px;
+    background: linear-gradient(135deg, #ffd700, #ffed4e);
+    color: #333;
+    border-radius: 20px 20px 0 0;
+}
+
+.result-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.result-probability {
+    font-size: 0.9em;
+    opacity: 0.8;
+}
+
+.result-content {
+    padding: 30px 25px;
+}
+
+.result-image {
+    margin-bottom: 20px;
+}
+
+.result-image img {
+    width: 200px;
+    height: 200px;
+    object-fit: cover;
+    border-radius: 15px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+}
+
+.result-name {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.result-actions {
+    justify-content: center;
+}
+
+/* アニメーション */
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slotSpin {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-300px); }
+}
+
+@keyframes resultPop {
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+.slot-spinning .slot-item {
+    animation: slotSpin 0.1s linear infinite;
+}
+
+.result-pop .result-image {
+    animation: resultPop 0.6s ease;
+}
+
+@keyframes slideInRight {
+    from { transform: translateX(100%); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideOutRight {
+    from { transform: translateX(0); opacity: 1; }
+    to { transform: translateX(100%); opacity: 0; }
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .container {
+        padding: 15px;
+    }
+    
+    .app-title {
+        font-size: 2em;
+    }
+    
+    .gacha-section, .list-section {
+        padding: 20px;
+    }
+    
+    .section-header {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .places-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 15px;
+    }
+    
+    .probability-info {
+        flex-direction: column;
+        gap: 8px;
+        align-items: center;
+    }
+    
+    .modal, .result-modal {
+        width: 95%;
+        margin: 20px;
+    }
+    
+    .probability-selector .radio-option {
+        flex-direction: row;
+    }
+}

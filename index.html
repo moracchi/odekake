@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>週末おでかけ先ガチャ</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <header class="header">
+            <h1 class="app-title">🎰 週末おでかけ先ガチャ</h1>
+            <p class="subtitle">どこに行くかはガチャが決める！</p>
+            <!-- 容量表示 -->
+            <div class="storage-info" id="storageInfo">
+                <span class="storage-usage">容量使用量: <span id="storageUsage">0</span>MB / 5MB</span>
+            </div>
+        </header>
+
+        <!-- ガチャエリア -->
+        <section class="gacha-section">
+            <div class="gacha-container">
+                <div class="slot-display" id="slotDisplay">
+                    <div class="slot-item">
+                        <div class="placeholder">🎲</div>
+                        <p>ガチャを回してみよう！</p>
+                    </div>
+                </div>
+                <button class="gacha-button" id="gachaButton">
+                    <span class="button-text">🎰 ガチャを回す！</span>
+                    <div class="button-shine"></div>
+                </button>
+                <p class="places-count">登録済み: <span id="placesCount">0</span> 件</p>
+                <!-- 確率表示 -->
+                <div class="probability-info">
+                    <span class="prob-item">🔴高確率: <span id="highCount">0</span>件</span>
+                    <span class="prob-item">🟡中確率: <span id="mediumCount">0</span>件</span>
+                    <span class="prob-item">🔵低確率: <span id="lowCount">0</span>件</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- リストエリア -->
+        <section class="list-section">
+            <div class="section-header">
+                <h2>📍 おでかけ先リスト</h2>
+                <button class="add-button" id="addButton">＋ 追加</button>
+            </div>
+            <div class="places-grid" id="placesGrid">
+                <div class="empty-state" id="emptyState">
+                    <div class="empty-icon">📍</div>
+                    <p>まだおでかけ先が登録されていません</p>
+                    <p>「＋ 追加」ボタンから登録してみましょう！</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- 追加・編集モーダル -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modalTitle">新しい場所を追加</h3>
+                <button class="modal-close" id="modalClose">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="placeForm">
+                    <div class="form-group">
+                        <label for="placeName">場所の名前</label>
+                        <input type="text" id="placeName" placeholder="例：上野動物園" required>
+                    </div>
+                    
+                    <!-- 出現率選択 -->
+                    <div class="form-group">
+                        <label for="probability">出現率</label>
+                        <div class="probability-selector">
+                            <label class="radio-option">
+                                <input type="radio" name="probability" value="high" checked>
+                                <span class="radio-label high">🔴 高確率 (約50%)</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="probability" value="medium">
+                                <span class="radio-label medium">🟡 中確率 (約30%)</span>
+                            </label>
+                            <label class="radio-option">
+                                <input type="radio" name="probability" value="low">
+                                <span class="radio-label low">🔵 低確率 (約20%)</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="placeImage">画像をアップロード</label>
+                        <input type="file" id="placeImage" accept="image/*">
+                        <div class="image-info">
+                            <small>※ 画像は自動的に320x240pxにリサイズされます</small>
+                        </div>
+                        <div class="image-preview" id="imagePreview"></div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelButton">キャンセル</button>
+                <button class="btn-primary" id="saveButton">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 結果表示モーダル -->
+    <div class="modal-overlay" id="resultModal">
+        <div class="result-modal">
+            <div class="result-header">
+                <h2 class="result-title">🎉 今週はここに決定！</h2>
+                <!-- 確率表示 -->
+                <div class="result-probability" id="resultProbability"></div>
+            </div>
+            <div class="result-content">
+                <div class="result-image" id="resultImage"></div>
+                <div class="result-name" id="resultName"></div>
+            </div>
+            <div class="result-actions">
+                <button class="btn-secondary" id="closeResult">閉じる</button>
+                <button class="btn-primary" id="retryGacha">もう一回引く</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
