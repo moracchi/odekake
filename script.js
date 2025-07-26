@@ -232,7 +232,7 @@ class OdekakeGacha {
         }
     }
     
-    // 画像リサイズ機能
+    // 画像リサイズ機能（4:3比率の320×240pxに統一）
     resizeImage(file, maxWidth = 320, maxHeight = 240, quality = 0.8) {
         return new Promise((resolve) => {
             const canvas = document.createElement('canvas');
@@ -240,12 +240,35 @@ class OdekakeGacha {
             const img = new Image();
             
             img.onload = () => {
-                // アスペクト比を保ったリサイズ
-                const ratio = Math.min(maxWidth / img.width, maxHeight / img.height);
-                canvas.width = img.width * ratio;
-                canvas.height = img.height * ratio;
+                // 4:3比率に固定してリサイズ
+                const targetRatio = maxWidth / maxHeight; // 4:3 = 1.333...
+                const imageRatio = img.width / img.height;
                 
-                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+                let drawWidth, drawHeight, offsetX = 0, offsetY = 0;
+                
+                if (imageRatio > targetRatio) {
+                    // 横長の画像：高さを基準にして幅をトリミング
+                    drawHeight = img.height;
+                    drawWidth = img.height * targetRatio;
+                    offsetX = (img.width - drawWidth) / 2;
+                } else {
+                    // 縦長の画像：幅を基準にして高さをトリミング
+                    drawWidth = img.width;
+                    drawHeight = img.width / targetRatio;
+                    offsetY = (img.height - drawHeight) / 2;
+                }
+                
+                // キャンバスサイズを設定
+                canvas.width = maxWidth;
+                canvas.height = maxHeight;
+                
+                // 画像を4:3比率でキャンバスに描画
+                ctx.drawImage(
+                    img,
+                    offsetX, offsetY, drawWidth, drawHeight, // ソース画像の切り取り範囲
+                    0, 0, maxWidth, maxHeight // キャンバス上の描画範囲
+                );
+                
                 resolve(canvas.toDataURL('image/jpeg', quality));
             };
             

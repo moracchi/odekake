@@ -21,6 +21,7 @@
         <!-- ガチャエリア -->
         <section class="gacha-section">
             <div class="gacha-container">
+                <!-- スロット表示エリアを4:3比率に調整 -->
                 <div class="slot-display" id="slotDisplay">
                     <div class="slot-item">
                         <div class="placeholder">🎲</div>
@@ -102,7 +103,7 @@
                         <label for="placeImage">画像をアップロード</label>
                         <input type="file" id="placeImage" accept="image/*">
                         <div class="image-info">
-                            <small>※ 画像は自動的に320x240pxにリサイズされます</small>
+                            <small>※ 画像は自動的に320x240px（4:3比率）にリサイズされます</small>
                         </div>
                         <div class="image-preview" id="imagePreview"></div>
                     </div>
@@ -124,6 +125,7 @@
                 <div class="result-probability" id="resultProbability"></div>
             </div>
             <div class="result-content">
+                <!-- 結果画像も4:3比率に調整 -->
                 <div class="result-image" id="resultImage"></div>
                 <div class="result-name" id="resultName"></div>
             </div>
@@ -137,7 +139,6 @@
     <!-- 音声ファイル -->
     <audio id="spinSound" preload="auto">
         <source src="sounds/gacha-spin.mp3" type="audio/mpeg">
-        <!-- 音声ファイルがない場合の代替処理は JavaScript で行う -->
     </audio>
     
     <audio id="stopSound" preload="auto">

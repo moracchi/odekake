@@ -66,9 +66,10 @@ body {
     margin: 0 auto;
 }
 
+/* スロット表示エリアを4:3比率（160×120px）に調整 */
 .slot-display {
     width: 200px;
-    height: 200px;
+    height: 170px;
     margin: 0 auto 30px;
     border: 4px solid #ffd700;
     border-radius: 15px;
@@ -76,6 +77,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
+    flex-direction: column;
     overflow: hidden;
     position: relative;
 }
@@ -86,22 +88,25 @@ body {
 }
 
 .slot-item .placeholder {
-    font-size: 4em;
+    font-size: 3em;
     margin-bottom: 10px;
 }
 
+/* スロット画像を4:3比率（160×120px）に統一 */
 .slot-item img {
-    width: 150px;
-    height: 150px;
+    width: 160px;
+    height: 120px;
     object-fit: cover;
-    border-radius: 10px;
+    border-radius: 8px;
+    margin-bottom: 5px;
 }
 
 .slot-item p {
     font-weight: bold;
     color: #666;
-    font-size: 0.9em;
+    font-size: 0.85em;
     margin-top: 5px;
+    line-height: 1.2;
 }
 
 .gacha-button {
@@ -287,9 +292,11 @@ body {
     box-shadow: 0 8px 25px rgba(0,0,0,0.15);
 }
 
+/* リストの画像も4:3比率に統一 */
 .place-card img {
     width: 100%;
-    height: 120px;
+    height: calc(100vw * 0.15); /* レスポンシブで4:3比率を維持 */
+    max-height: 120px;
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -502,9 +509,11 @@ body {
     text-align: center;
 }
 
+/* プレビュー画像も4:3比率に統一 */
 .image-preview img {
     max-width: 200px;
-    max-height: 200px;
+    max-height: 150px;
+    object-fit: cover;
     border-radius: 10px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
@@ -571,9 +580,10 @@ body {
     margin-bottom: 20px;
 }
 
+/* 結果表示画像を4:3比率（240×180px）に統一 */
 .result-image img {
-    width: 200px;
-    height: 200px;
+    width: 240px;
+    height: 180px;
     object-fit: cover;
     border-radius: 15px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.2);
@@ -659,6 +669,23 @@ body {
         flex-direction: column;
         gap: 8px;
         align-items: center;
+    }
+    
+    /* モバイル用スロット表示サイズ調整 */
+    .slot-display {
+        width: 180px;
+        height: 155px;
+    }
+    
+    .slot-item img {
+        width: 140px;
+        height: 105px;
+    }
+    
+    /* モバイル用結果表示サイズ調整 */
+    .result-image img {
+        width: 200px;
+        height: 150px;
     }
     
     .modal, .result-modal {
