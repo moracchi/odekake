@@ -11,7 +11,15 @@ class OdekakeGacha {
             low: 2      // 低確率：約20%
         };
         
+        // 音声関連
+        this.sounds = {
+            spin: null,
+            stop: null,
+            result: null
+        };
+        
         this.initElements();
+        this.initSounds();
         this.bindEvents();
         this.render();
         this.updateStorageInfo();
@@ -54,6 +62,28 @@ class OdekakeGacha {
         
         // 容量表示
         this.storageUsage = document.getElementById('storageUsage');
+        
+        // 音声コントロール
+        this.soundEnabled = document.getElementById('soundEnabled');
+        this.volumeControl = document.getElementById('volumeControl');
+    }
+    
+    initSounds() {
+        // 音声要素を取得
+        this.sounds.spin = document.getElementById('spinSound');
+        this.sounds.stop = document.getElementById('stopSound');
+        this.sounds.result = document.getElementById('resultSound');
+        
+        // 音声ファイルがない場合のエラーハンドリング
+        Object.keys(this.sounds).forEach(key => {
+            if (this.sounds[key]) {
+                this.sounds[key].volume = this.volumeControl.value;
+                this.sounds[key].addEventListener('error', (e) => {
+                    console.warn(`音声ファイル ${key} が見つかりません:`, e);
+                    this.sounds[key] = null; // エラーの場合は無効化
+                });
+            }
+        });
     }
     
     bindEvents() {
@@ -76,6 +106,19 @@ class OdekakeGacha {
             setTimeout(() => this.executeGacha(), 300);
         });
         
+        // 音声コントロール
+        this.soundEnabled.addEventListener('change', () => {
+            this.saveSettings();
+        });
+        
+        this.volumeControl.addEventListener('input', (e) => {
+            const volume = parseFloat(e.target.value);
+            Object.values(this.sounds).forEach(sound => {
+                if (sound) sound.volume = volume;
+            });
+            this.saveSettings();
+        });
+        
         // モーダル外クリックで閉じる
         this.editModal.addEventListener('click', (e) => {
             if (e.target === this.editModal) this.closeModal();
@@ -83,6 +126,55 @@ class OdekakeGacha {
         this.resultModal.addEventListener('click', (e) => {
             if (e.target === this.resultModal) this.closeResultModal();
         });
+        
+        // 設定を読み込み
+        this.loadSettings();
+    }
+    
+    loadSettings() {
+        const settings = localStorage.getItem('gacha-settings');
+        if (settings) {
+            const parsed = JSON.parse(settings);
+            this.soundEnabled.checked = parsed.soundEnabled !== false;
+            this.volumeControl.value = parsed.volume || 0.5;
+            
+            // 音量を適用
+            Object.values(this.sounds).forEach(sound => {
+                if (sound) sound.volume = this.volumeControl.value;
+            });
+        }
+    }
+    
+    saveSettings() {
+        const settings = {
+            soundEnabled: this.soundEnabled.checked,
+            volume: parseFloat(this.volumeControl.value)
+        };
+        localStorage.setItem('gacha-settings', JSON.stringify(settings));
+    }
+    
+    playSound(soundName) {
+        if (!this.soundEnabled.checked || !this.sounds[soundName]) return;
+        
+        try {
+            this.sounds[soundName].currentTime = 0;
+            this.sounds[soundName].play().catch(e => {
+                console.warn(`音声再生エラー (${soundName}):`, e);
+            });
+        } catch (e) {
+            console.warn(`音声再生エラー (${soundName}):`, e);
+        }
+    }
+    
+    stopSound(soundName) {
+        if (this.sounds[soundName]) {
+            try {
+                this.sounds[soundName].pause();
+                this.sounds[soundName].currentTime = 0;
+            } catch (e) {
+                console.warn(`音声停止エラー (${soundName}):`, e);
+            }
+        }
     }
     
     loadPlaces() {
@@ -221,7 +313,7 @@ class OdekakeGacha {
         
         // 高確率をデフォルト選択
         const highRadio = document.querySelector('input[name="probability"][value="high"]');
-        highRadio.checked = true;
+        if (highRadio) highRadio.checked = true;
         
         this.editModal.classList.add('active');
     }
@@ -236,7 +328,7 @@ class OdekakeGacha {
         
         // 確率を選択
         const probabilityRadio = document.querySelector(`input[name="probability"][value="${place.probability}"]`);
-        probabilityRadio.checked = true;
+        if (probabilityRadio) probabilityRadio.checked = true;
         
         this.editModal.classList.add('active');
     }
@@ -264,7 +356,8 @@ class OdekakeGacha {
     async savePlace() {
         const name = this.placeName.value.trim();
         const imageFile = this.placeImage.files[0];
-        const probability = document.querySelector('input[name="probability"]:checked').value;
+        const probabilityRadio = document.querySelector('input[name="probability"]:checked');
+        const probability = probabilityRadio ? probabilityRadio.value : 'high';
         
         if (!name) {
             this.showToast('場所の名前を入力してください', 'error');
@@ -277,11 +370,15 @@ class OdekakeGacha {
         }
         
         const savePlace = async (imageData) => {
+            const oldId = (this.currentEditIndex >= 0)
+                         ? this.places[this.currentEditIndex].id
+                         : Date.now();
+                         
             const place = {
                 name: name,
                 image: imageData,
                 probability: probability,
-                id: Date.now()
+                id: oldId
             };
             
             if (this.currentEditIndex >= 0) {
@@ -324,19 +421,17 @@ class OdekakeGacha {
     
     // 重み付きランダム選択
     selectByProbability() {
-        // 確率ごとに重みを付けた配列を作成
         const weightedArray = [];
-        
-        this.places.forEach((place, index) => {
-            const weight = this.probabilityWeights[place.probability];
+        this.places.forEach((place, idx) => {
+            const weight = this.probabilityWeights[place.probability] || 1;
             for (let i = 0; i < weight; i++) {
-                weightedArray.push(index);
+                weightedArray.push(idx);
             }
         });
         
-        // 重み付き配列からランダム選択
         const randomIndex = Math.floor(Math.random() * weightedArray.length);
-        return this.places[weightedArray[randomIndex]];
+        const selectedIndex = weightedArray[randomIndex];
+        return this.places[selectedIndex];
     }
     
     async executeGacha() {
@@ -349,13 +444,14 @@ class OdekakeGacha {
         
         this.isSpinning = true;
         this.gachaButton.disabled = true;
+        this.addButton.disabled = true;
         this.gachaButton.innerHTML = '<span class="button-text">🎰 回転中...</span>';
         
-        // スロット演出
-        await this.spinSlot();
-        
-        // 重み付きランダム選択で結果決定
+        // 🎯 重要: 先に結果を決定
         const selectedPlace = this.selectByProbability();
+        
+        // スロット演出（結果を最後に表示）
+        await this.spinSlot(selectedPlace);
         
         // 結果表示
         this.showResult(selectedPlace);
@@ -363,13 +459,18 @@ class OdekakeGacha {
         // リセット
         this.isSpinning = false;
         this.gachaButton.disabled = false;
+        this.addButton.disabled = false;
         this.gachaButton.innerHTML = '<span class="button-text">🎰 ガチャを回す！</span>';
     }
     
-    async spinSlot() {
+    async spinSlot(finalResult) {
+        // 🔊 回転音を再生
+        this.playSound('spin');
+        
         // 高速回転演出
         this.slotDisplay.classList.add('slot-spinning');
         
+        // ランダムな場所を高速で表示（30回）
         for (let i = 0; i < 30; i++) {
             const randomPlace = this.places[Math.floor(Math.random() * this.places.length)];
             this.slotDisplay.innerHTML = `
@@ -378,13 +479,39 @@ class OdekakeGacha {
                     <p>${randomPlace.name}</p>
                 </div>
             `;
-            await new Promise(resolve => setTimeout(resolve, 50 + i * 5));
+            await new Promise(resolve => setTimeout(resolve, 50 + i * 3));
+        }
+        
+        // 🔊 回転音を停止
+        this.stopSound('spin');
+        
+        // 徐々に減速（10回）
+        for (let i = 0; i < 10; i++) {
+            const randomPlace = this.places[Math.floor(Math.random() * this.places.length)];
+            this.slotDisplay.innerHTML = `
+                <div class="slot-item">
+                    <img src="${randomPlace.image}" alt="${randomPlace.name}">
+                    <p>${randomPlace.name}</p>
+                </div>
+            `;
+            await new Promise(resolve => setTimeout(resolve, 100 + i * 20));
         }
         
         this.slotDisplay.classList.remove('slot-spinning');
         
+        // 🎯 最終結果を表示（実際の抽選結果と一致）
+        this.slotDisplay.innerHTML = `
+            <div class="slot-item">
+                <img src="${finalResult.image}" alt="${finalResult.name}">
+                <p>${finalResult.name}</p>
+            </div>
+        `;
+        
+        // 🔊 停止音を再生
+        this.playSound('stop');
+        
         // ドラムロール効果
-        await new Promise(resolve => setTimeout(resolve, 500));
+        await new Promise(resolve => setTimeout(resolve, 800));
     }
     
     showResult(place) {
@@ -398,6 +525,9 @@ class OdekakeGacha {
         this.resultName.textContent = place.name;
         this.resultProbability.textContent = probabilityLabels[place.probability];
         this.resultModal.classList.add('active');
+        
+        // 🔊 結果音を再生
+        this.playSound('result');
         
         // ポップ演出
         setTimeout(() => {

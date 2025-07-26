@@ -100,6 +100,8 @@ body {
 .slot-item p {
     font-weight: bold;
     color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
 }
 
 .gacha-button {
@@ -129,6 +131,7 @@ body {
 .gacha-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    transform: translateY(0);
 }
 
 .button-shine {
@@ -158,6 +161,7 @@ body {
     gap: 15px;
     flex-wrap: wrap;
     font-size: 0.85em;
+    margin-bottom: 20px;
 }
 
 .prob-item {
@@ -166,6 +170,61 @@ body {
     border-radius: 15px;
     color: #666;
     font-weight: bold;
+}
+
+/* 音量コントロール */
+.sound-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    padding: 15px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 15px;
+    font-size: 0.9em;
+}
+
+.sound-toggle {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+    gap: 8px;
+}
+
+.sound-toggle input[type="checkbox"] {
+    margin: 0;
+}
+
+.sound-label {
+    color: #666;
+    font-weight: bold;
+}
+
+.volume-slider {
+    width: 120px;
+    height: 6px;
+    background: #ddd;
+    border-radius: 3px;
+    outline: none;
+    cursor: pointer;
+}
+
+.volume-slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: #4ecdc4;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.volume-slider::-moz-range-thumb {
+    width: 16px;
+    height: 16px;
+    background: #4ecdc4;
+    border-radius: 50%;
+    border: none;
+    cursor: pointer;
 }
 
 /* リストセクション */
@@ -196,11 +255,16 @@ body {
     color: white;
     font-weight: bold;
     cursor: pointer;
-    transition: background 0.3s;
+    transition: background 0.3s, opacity 0.3s;
 }
 
 .add-button:hover {
     background: #45b7b8;
+}
+
+.add-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
 }
 
 .places-grid {
@@ -604,5 +668,13 @@ body {
     
     .probability-selector .radio-option {
         flex-direction: row;
+    }
+    
+    .sound-controls {
+        font-size: 0.8em;
+    }
+    
+    .volume-slider {
+        width: 100px;
     }
 }

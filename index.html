@@ -38,6 +38,14 @@
                     <span class="prob-item">🟡中確率: <span id="mediumCount">0</span>件</span>
                     <span class="prob-item">🔵低確率: <span id="lowCount">0</span>件</span>
                 </div>
+                <!-- 音量コントロール -->
+                <div class="sound-controls">
+                    <label class="sound-toggle">
+                        <input type="checkbox" id="soundEnabled" checked>
+                        <span class="sound-label">🔊 効果音ON</span>
+                    </label>
+                    <input type="range" id="volumeControl" min="0" max="1" step="0.1" value="0.5" class="volume-slider">
+                </div>
             </div>
         </section>
 
@@ -125,6 +133,20 @@
             </div>
         </div>
     </div>
+
+    <!-- 音声ファイル -->
+    <audio id="spinSound" preload="auto">
+        <source src="sounds/gacha-spin.mp3" type="audio/mpeg">
+        <!-- 音声ファイルがない場合の代替処理は JavaScript で行う -->
+    </audio>
+    
+    <audio id="stopSound" preload="auto">
+        <source src="sounds/gacha-stop.mp3" type="audio/mpeg">
+    </audio>
+    
+    <audio id="resultSound" preload="auto">
+        <source src="sounds/gacha-result.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="script.js"></script>
 </body>
